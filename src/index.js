@@ -1,12 +1,59 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { ReactDOM,BrowserRouter } from 'react-dom';
+/* 防VDC配置 */
+// import { browserHistory } from 'react-router';
+// import { syncHistoryWithStore } from 'react-router-redux';
+import { addLocaleData, IntlProvider } from 'react-intl';
+import configureStore from './store/configureStore';
+import en from 'react-intl/locale-data/en';
+import zh from 'react-intl/locale-data/zh';
+import { config } from './locale/config';
+import { getToken, decode } from '../src/utils/auth';
+
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+addLocaleData([...zh, ...en]);
+const store = configureStore();
+//const history = syncHistoryWithStore(browserHistory, store);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
+export function getLocale() {
+    const token = decode(getToken());
+    let currentLang = '';
+    if (token.locale) {
+      currentLang = token.locale;
+    } else {
+      currentLang = (navigator.language || navigator.browserLanguage).toLowerCase();
+    }
+    let currentLanguage = '';
+    if (currentLang.indexOf('zh') > -1) {
+      currentLanguage = {
+        locale: config.locale,
+        messages: config.messages,
+      };
+    } else if (currentLang.indexOf('en') > -1) {
+      currentLanguage = {
+        locale: config.localeEn,
+        messages: config.messagesEn,
+      };
+    } else {
+      currentLanguage = {
+        locale: config.locale,
+        messages: config.messages,
+      };
+    }
+  
+    return currentLanguage;
+  }
+
+ReactDOM.render(
+    <IntlProvider
+      locale={getLocale().locale}
+      messages={getLocale().messages}
+    >
+        <BrowserRouter><App store={store} /></BrowserRouter>
+    </IntlProvider>
+    , document.getElementById('root'));
+    
 serviceWorker.unregister();
