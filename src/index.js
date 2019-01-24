@@ -1,8 +1,8 @@
 import React from 'react';
-import { ReactDOM,BrowserRouter } from 'react-dom';
+import { ReactDOM,BrowserRouter,render } from 'react-dom';
 /* 防VDC配置 */
-// import { browserHistory } from 'react-router';
-// import { syncHistoryWithStore } from 'react-router-redux';
+import { browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import configureStore from './store/configureStore';
 import en from 'react-intl/locale-data/en';
@@ -10,13 +10,15 @@ import zh from 'react-intl/locale-data/zh';
 import { config } from './locale/config';
 import { getToken, decode } from '../src/utils/auth';
 
+import Root from './containers/Root';
+
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 addLocaleData([...zh, ...en]);
 const store = configureStore();
-//const history = syncHistoryWithStore(browserHistory, store);
+const history = syncHistoryWithStore(browserHistory, store);
 
 export function getLocale() {
     const token = decode(getToken());
@@ -47,12 +49,12 @@ export function getLocale() {
     return currentLanguage;
   }
 
-ReactDOM.render(
+render(
     <IntlProvider
       locale={getLocale().locale}
       messages={getLocale().messages}
     >
-        <BrowserRouter><App store={store} /></BrowserRouter>
+        <BrowserRouter><Root store={store} history={history} /></BrowserRouter>
     </IntlProvider>
     , document.getElementById('root'));
     
