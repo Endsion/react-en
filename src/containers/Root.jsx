@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router, applyRouterMiddleware } from 'react-router';
+import { Router, applyRouterMiddleware } from 'react-router-dom';
 import useScroll from 'react-router-scroll';
 
 import routes from '../routes';

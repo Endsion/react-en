@@ -13,7 +13,6 @@ import { getToken, decode } from '../src/utils/auth';
 import Root from './containers/Root';
 
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 addLocaleData([...zh, ...en]);
@@ -54,7 +53,7 @@ render(
       locale={getLocale().locale}
       messages={getLocale().messages}
     >
-        <BrowserRouter><Root store={store} history={history} /></BrowserRouter>
+        <Root store={store} history={history} />
     </IntlProvider>
     , document.getElementById('root'));
     
